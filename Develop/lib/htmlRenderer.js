@@ -1,3 +1,4 @@
+//START assignment-provided code
 const path = require("path");
 const fs = require("fs");
 
@@ -64,3 +65,4 @@ const replacePlaceholders = (template, placeholder, value) => {
 };
 
 module.exports = render;
+//END assignment-provided code
