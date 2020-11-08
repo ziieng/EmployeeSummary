@@ -12,6 +12,90 @@ const outputPath = path.join(OUTPUT_DIR, "team.html");
 const render = require("./lib/htmlRenderer");
 //END assignment-provided code
 
+const employees = []
+
+const empQs = [{
+        type: "input",
+        message: "What is this employee's name?",
+        name: "name",
+        validate: (input) => (input == "") ? false : true
+    },
+    {
+        type: "input",
+        message: "What is this employee's ID number?",
+        name: "id",
+        validate: (input) => (input == "") ? false : true
+    },
+    {
+        type: "input",
+        message: "What is this employee's email address?",
+        name: "email",
+        validate: (input) => (input == "") ? false : true
+    }
+]
+
+//start: ask user what employee type to add
+
+//all: name, id, email
+async function addEmployee() {
+    let emp = {}
+    const type = await inquirer.prompt([{
+        type: "list",
+        message: "Which type of employee do you want to add?",
+        name: "type",
+        choices: [
+            "Engineer",
+            "Intern",
+            "Manager",
+            "(Cancel)"
+        ]
+    }])
+    switch (type) {
+        case "Engineer":
+            //engineer adds: github username
+            const ans = await inquirer.prompt([...empQs,
+                {
+                    type: "input",
+                    message: "What is this employee's GitHub username?",
+                    name: "github",
+                    validate: (input) => (input == "") ? false : true
+                }
+            ])
+            //I don't think this call will work, but we can try
+            emp = new Engineer(ans)
+            break;
+        case "Intern":
+            //intern adds: school
+            const ans = await inquirer.prompt([...empQs,
+                {
+                    type: "input",
+                    message: "What school is this employee attending?",
+                    name: "school",
+                    validate: (input) => (input == "") ? false : true
+                }
+            ])
+            break;
+        case "Manager":
+            //manager adds: office number
+            const ans = await inquirer.prompt([...empQs,
+                {
+                    type: "input",
+                    message: "What is this employee's office number?",
+                    name: "officeNumber",
+                    validate: (input) => (input == "") ? false : true
+                }
+            ])
+            break;
+        default:
+            break;
+    }
+    return emp
+}
+
+//ask if they're done, or if they want another employee
+//offer to list employees so far?
+//loop back to start
+
 // Write code to use inquirer to gather information about the development team members,
 // and to create objects for each team member (using the correct classes as blueprints!)
 
@@ -25,12 +109,11 @@ const render = require("./lib/htmlRenderer");
 // Hint: you may need to check if the `output` folder exists and create it if it
 // does not.
 
+//create output folder if it doesn't exist
+if (!fs.existsSync(OUTPUT_DIR)) {
+    fs.mkdirSync(OUTPUT_DIR);
+}
+
 // HINT: each employee type (manager, engineer, or intern) has slightly different
 // information; write your code to ask different questions via inquirer depending on
 // employee type.
-
-// HINT: make sure to build out your classes first! Remember that your Manager, Engineer,
-// and Intern classes should all extend from a class named Employee; see the directions
-// for further information. Be sure to test out each class and verify it generates an
-// object with the correct structure and methods. This structure will be crucial in order
-// for the provided `render` function to work! ```
