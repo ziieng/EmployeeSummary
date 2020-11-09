@@ -13,8 +13,10 @@ const outputPath = path.join(OUTPUT_DIR, "team.html");
 //END assignment-provided code
 
 const employees = []
+let lastId = 99
 
-const empQs = [{
+async function addEmployee() {
+    const empQs = [{
         type: "input",
         message: "What is this employee's name?",
         name: "name",
@@ -24,6 +26,7 @@ const empQs = [{
         type: "input",
         message: "What is this employee's ID number?",
         name: "id",
+        default: lastId + 1,
         validate: (input) => (input == "") ? false : true
     },
     {
@@ -43,7 +46,6 @@ const empQs = [{
         }
         }
 ]
-async function addEmployee() {
     let emp = {}
     const type = await inquirer.prompt([{
         type: "list",
@@ -97,9 +99,8 @@ async function addEmployee() {
             //Create object with given values
             emp = new Manager(ans.name, ans.id, ans.email, ans.officeNumber)
             break;
-        default:
-            break;
     }
+    lastId = emp.id
     return emp
 }
 
@@ -154,7 +155,7 @@ async function chooseRoute() {
                         "Yes",
                     ]
                 }])
-                if (confirm == "No") {
+                if (confirm.next == "No") {
                     next = ""
                 }
                 break;
@@ -203,6 +204,3 @@ function makePage() {
 }
 
 chooseRoute()
-// HINT: each employee type (manager, engineer, or intern) has slightly different
-// information; write your code to ask different questions via inquirer depending on
-// employee type.
