@@ -30,8 +30,18 @@ const empQs = [{
         type: "input",
         message: "What is this employee's email address?",
         name: "email",
-        validate: (input) => (input == "") ? false : true
-    }
+        validate: function (email) {
+                //test from https://gist.github.com/Amitabh-K/ae073eea3d5207efaddffde19b1618e8
+                valid = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)
+
+                if (valid) {
+                    return true;
+                } else {
+                    console.log(".  Please enter a valid email address")
+                    return false;
+            }
+        }
+        }
 ]
 async function addEmployee() {
     let emp = {}
@@ -46,10 +56,11 @@ async function addEmployee() {
             "(Cancel)"
         ]
     }])
-    switch (type) {
+    let ans = ""
+    switch (type.type) {
         case "Engineer":
             //engineer adds: github username
-            const ans = await inquirer.prompt([...empQs,
+            ans = await inquirer.prompt([...empQs,
                 {
                     type: "input",
                     message: "What is this employee's GitHub username?",
@@ -58,11 +69,11 @@ async function addEmployee() {
                 }
             ])
             //Create object with given values
-            emp = new Engineer(Object.values(ans))
+            emp = new Engineer(ans.name, ans.id, ans.email, ans.github)
             break;
         case "Intern":
             //intern adds: school
-            const ans = await inquirer.prompt([...empQs,
+            ans = await inquirer.prompt([...empQs,
                 {
                     type: "input",
                     message: "What school is this employee attending?",
@@ -71,11 +82,11 @@ async function addEmployee() {
                 }
             ])
             //Create object with given values
-            emp = new Intern(Object.values(ans))
+            emp = new Intern(ans.name, ans.id, ans.email, ans.school)
             break;
         case "Manager":
             //manager adds: office number
-            const ans = await inquirer.prompt([...empQs,
+            ans = await inquirer.prompt([...empQs,
                 {
                     type: "input",
                     message: "What is this employee's office number?",
@@ -84,7 +95,7 @@ async function addEmployee() {
                 }
             ])
             //Create object with given values
-            emp = new Manager(Object.values(ans))
+            emp = new Manager(ans.name, ans.id, ans.email, ans.officeNumber)
             break;
         default:
             break;
@@ -97,7 +108,7 @@ async function addEmployee() {
 //loop back to start
 
 async function chooseRoute() {
-    if (employees == "[]") {
+    if (employees.length === 0) {
         let newEmployee = await addEmployee()
         employees.push(newEmployee)
     }
@@ -134,18 +145,18 @@ async function chooseRoute() {
                 break;
 
             case "Exit":
-            let confirm = await inquirer.prompt([{
-                type: "list",
-                message: "Are you sure you want to exit without creating HTML file?",
-                name: "next",
-                choices: [
-                    "No",
-                    "Yes",
-                ]
-            }])
-            if (confirm == "No") {
-                next = ""
-            }
+                let confirm = await inquirer.prompt([{
+                    type: "list",
+                    message: "Are you sure you want to exit without creating HTML file?",
+                    name: "next",
+                    choices: [
+                        "No",
+                        "Yes",
+                    ]
+                }])
+                if (confirm == "No") {
+                    next = ""
+                }
                 break;
         }
     }
@@ -153,53 +164,45 @@ async function chooseRoute() {
 }
 
 function listEmployees() {
-    console.log("Employees entered so far:\n--------------")
+    console.log("\n\nEmployees entered so far:\n--------------")
     let engArr = employees.filter(employee => employee.getRole() === "Engineer")
-    if (engArr != "[]") {
+    if (engArr.length > 0) {
         console.log("Engineers:\n")
         engArr.forEach(eng => {
             console.log(`--Name: ${eng.name} - ID ${eng.id}`)
         })
-        console.log("\n--------------\n")
+        console.log("\n--------------")
     }
     let intArr = employees.filter(employee => employee.getRole() === "Intern")
-    if (intArr != "[]") {
+    if (intArr.length > 0) {
         console.log("Interns:\n")
         intArr.forEach(int => {
             console.log(`--Name: ${int.name} - ID ${int.id}`)
         })
-        console.log("\n--------------\n")
+        console.log("\n--------------")
     }
     let manArr = employees.filter(employee => employee.getRole() === "Manager")
-    if (manArr != "[]") {
+    if (manArr.length > 0) {
         console.log("Managers:\n")
         manArr.forEach(man => {
             console.log(`--Name: ${man.name} - ID ${man.id}`)
         })
     }
+    console.log("\n")
 
 }
 
-// After the user has input all employees desired, call the `render` function (required
-// above) and pass in an array containing all employee objects; the `render` function will
-// generate and return a block of HTML including templated divs for each employee!
-
-// After you have your html, you're now ready to create an HTML file using the HTML
-// returned from the `render` function. Now write it to a file named `team.html` in the
-// `output` folder. You can use the variable `outputPath` above target this location.
-// Hint: you may need to check if the `output` folder exists and create it if it
-// does not.
-
-async function makePage() {
-//create output folder if it doesn't exist
-if (!fs.existsSync(OUTPUT_DIR)) {
-    fs.mkdirSync(OUTPUT_DIR);
-}
-let pageMade = render(employees)
-fs.writeFile(outputPath, pageMade, (err) => console.log(err))
-console.log(`Page created!\nLocation: ${outputPath}`)
+function makePage() {
+    //create output folder if it doesn't exist
+    if (!fs.existsSync(OUTPUT_DIR)) {
+        fs.mkdirSync(OUTPUT_DIR);
+    }
+    let pageMade = render(employees)
+    fs.writeFile(outputPath, pageMade, (err) => console.log(err))
+    console.log(`Page created!\nLocation: ${outputPath}`)
 }
 
+chooseRoute()
 // HINT: each employee type (manager, engineer, or intern) has slightly different
 // information; write your code to ask different questions via inquirer depending on
 // employee type.
