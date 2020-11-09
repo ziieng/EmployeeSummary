@@ -33,10 +33,6 @@ const empQs = [{
         validate: (input) => (input == "") ? false : true
     }
 ]
-
-//start: ask user what employee type to add
-
-//all: name, id, email
 async function addEmployee() {
     let emp = {}
     const type = await inquirer.prompt([{
@@ -137,7 +133,19 @@ async function chooseRoute() {
                 next = "Exit"
                 break;
 
-            default:
+            case "Exit":
+            let confirm = await inquirer.prompt([{
+                type: "list",
+                message: "Are you sure you want to exit without creating HTML file?",
+                name: "next",
+                choices: [
+                    "No",
+                    "Yes",
+                ]
+            }])
+            if (confirm == "No") {
+                next = ""
+            }
                 break;
         }
     }
@@ -182,9 +190,14 @@ function listEmployees() {
 // Hint: you may need to check if the `output` folder exists and create it if it
 // does not.
 
+async function makePage() {
 //create output folder if it doesn't exist
 if (!fs.existsSync(OUTPUT_DIR)) {
     fs.mkdirSync(OUTPUT_DIR);
+}
+let pageMade = render(employees)
+fs.writeFile(outputPath, pageMade, (err) => console.log(err))
+console.log(`Page created!\nLocation: ${outputPath}`)
 }
 
 // HINT: each employee type (manager, engineer, or intern) has slightly different
