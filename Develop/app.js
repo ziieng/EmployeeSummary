@@ -15,25 +15,29 @@ const outputPath = path.join(OUTPUT_DIR, "team.html");
 const employees = []
 let lastId = 99
 
+function makeId() {
+    return parseInt(lastId) + 1
+}
+
 async function addEmployee() {
     const empQs = [{
-        type: "input",
-        message: "What is this employee's name?",
-        name: "name",
-        validate: (input) => (input == "") ? false : true
-    },
-    {
-        type: "input",
-        message: "What is this employee's ID number?",
-        name: "id",
-        default: lastId + 1,
-        validate: (input) => (input == "") ? false : true
-    },
-    {
-        type: "input",
-        message: "What is this employee's email address?",
-        name: "email",
-        validate: function (email) {
+            type: "input",
+            message: "What is this employee's name?",
+            name: "name",
+            validate: (input) => (input == "") ? false : true
+        },
+        {
+            type: "input",
+            message: "What is this employee's ID number?",
+            name: "id",
+            default: makeId(),
+            validate: (input) => (input == "") ? false : true
+        },
+        {
+            type: "input",
+            message: "What is this employee's email address?",
+            name: "email",
+            validate: function (email) {
                 //test from https://gist.github.com/Amitabh-K/ae073eea3d5207efaddffde19b1618e8
                 valid = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)
 
@@ -42,10 +46,10 @@ async function addEmployee() {
                 } else {
                     console.log(".  Please enter a valid email address")
                     return false;
+                }
             }
         }
-        }
-]
+    ]
     let emp = {}
     const type = await inquirer.prompt([{
         type: "list",
