@@ -144,6 +144,33 @@ async function chooseRoute() {
 
 }
 
+function listEmployees() {
+    console.log("Employees entered so far:\n--------------")
+    let engArr = employees.filter(employee => employee.getRole() === "Engineer")
+    if (engArr != "[]") {
+        console.log("Engineers:\n")
+        engArr.forEach(eng => {
+            console.log(`--Name: ${eng.name} - ID ${eng.id}`)
+        })
+        console.log("\n--------------\n")
+    }
+    let intArr = employees.filter(employee => employee.getRole() === "Intern")
+    if (intArr != "[]") {
+        console.log("Interns:\n")
+        intArr.forEach(int => {
+            console.log(`--Name: ${int.name} - ID ${int.id}`)
+        })
+        console.log("\n--------------\n")
+    }
+    let manArr = employees.filter(employee => employee.getRole() === "Manager")
+    if (manArr != "[]") {
+        console.log("Managers:\n")
+        manArr.forEach(man => {
+            console.log(`--Name: ${man.name} - ID ${man.id}`)
+        })
+    }
+
+}
 
 // After the user has input all employees desired, call the `render` function (required
 // above) and pass in an array containing all employee objects; the `render` function will
