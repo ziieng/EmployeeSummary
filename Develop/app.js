@@ -1,15 +1,15 @@
 //START assignment-provided code
-const Manager = require("./lib/Manager");
-const Engineer = require("./lib/Engineer");
-const Intern = require("./lib/Intern");
 const inquirer = require("inquirer");
 const path = require("path");
 const fs = require("fs");
 
-const OUTPUT_DIR = path.resolve(__dirname, "output");
-const outputPath = path.join(OUTPUT_DIR, "team.html");
+const Manager = require("./lib/Manager");
+const Engineer = require("./lib/Engineer");
+const Intern = require("./lib/Intern");
 
 const render = require("./lib/htmlRenderer");
+const OUTPUT_DIR = path.resolve(__dirname, "output");
+const outputPath = path.join(OUTPUT_DIR, "team.html");
 //END assignment-provided code
 
 const employees = []
@@ -61,8 +61,8 @@ async function addEmployee() {
                     validate: (input) => (input == "") ? false : true
                 }
             ])
-            //I don't think this call will work, but we can try
-            emp = new Engineer(ans)
+            //Create object with given values
+            emp = new Engineer(Object.values(ans))
             break;
         case "Intern":
             //intern adds: school
@@ -74,6 +74,8 @@ async function addEmployee() {
                     validate: (input) => (input == "") ? false : true
                 }
             ])
+            //Create object with given values
+            emp = new Intern(Object.values(ans))
             break;
         case "Manager":
             //manager adds: office number
@@ -85,6 +87,8 @@ async function addEmployee() {
                     validate: (input) => (input == "") ? false : true
                 }
             ])
+            //Create object with given values
+            emp = new Manager(Object.values(ans))
             break;
         default:
             break;
@@ -96,8 +100,50 @@ async function addEmployee() {
 //offer to list employees so far?
 //loop back to start
 
-// Write code to use inquirer to gather information about the development team members,
-// and to create objects for each team member (using the correct classes as blueprints!)
+async function chooseRoute() {
+    if (employees == "[]") {
+        let newEmployee = await addEmployee()
+        employees.push(newEmployee)
+    }
+    let next = ""
+    let pick = {}
+
+    while (next != "Exit") {
+        pick = await inquirer.prompt([{
+            type: "list",
+            message: "What would you like to do?",
+            name: "next",
+            choices: [
+                "Add new employee",
+                "List employees entered so far",
+                "Create website",
+                "Exit without creating website"
+            ]
+        }])
+        next = pick.next.split(" ")
+        next = next[0]
+        switch (next) {
+            case "Add":
+                newEmployee = await addEmployee()
+                employees.push(newEmployee)
+                break;
+
+            case "List":
+                listEmployees()
+                break;
+
+            case "Create":
+                makePage()
+                next = "Exit"
+                break;
+
+            default:
+                break;
+        }
+    }
+
+}
+
 
 // After the user has input all employees desired, call the `render` function (required
 // above) and pass in an array containing all employee objects; the `render` function will
