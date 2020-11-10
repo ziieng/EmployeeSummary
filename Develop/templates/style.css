@@ -9,7 +9,10 @@
     margin: 5px;
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 3px 8px 0 rgba(0, 0, 0, 0.19);
     border-radius: 5px;
-    border: thin solid #73956F
+    border: thin solid #73956F;
+    float: left;
+    min-width: 200px;
+    max-width: 300px;
 }
 
 .employee-card .card-header {
