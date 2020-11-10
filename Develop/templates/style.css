@@ -1,0 +1,22 @@
+.team-heading {
+    background-color: #061826;
+    color: white;
+    border-radius: 0px;
+}
+
+.employee-card {
+    background-color: #EDF6FC;
+    margin: 5px;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 3px 8px 0 rgba(0, 0, 0, 0.19);
+    border-radius: 5px;
+    border: thin solid #73956F
+}
+
+.employee-card .card-header {
+    background-color: #9AC19D;
+}
+
+.employee-card .list-group-item {
+    border: thin solid rgb(160, 160, 160);
+    border-radius: 5px;
+}

@@ -204,6 +204,8 @@ function makePage() {
     }
     let pageMade = render(employees)
     fs.writeFile(outputPath, pageMade, (err) => console.log(err))
+    let styles = fs.readFile(path.resolve(__dirname, "../templates/style.css"), (err) => console.log(err))
+    fs.writeFile(path.join(OUTPUT_DIR, "style.css"), styles, (err) => console.log(err))
     console.log(`Page created!\nLocation: ${outputPath}`)
 }
 
