@@ -203,9 +203,8 @@ function makePage() {
         fs.mkdirSync(OUTPUT_DIR);
     }
     let pageMade = render(employees)
-    fs.writeFile(outputPath, pageMade, (err) => console.log(err))
-    let styles = fs.readFile(path.resolve(__dirname, "../templates/style.css"), (err) => console.log(err))
-    fs.writeFile(path.join(OUTPUT_DIR, "style.css"), styles, (err) => console.log(err))
+    fs.writeFile(outputPath, pageMade, (err) => (err) ? console.log(err) : 0)
+    fs.copyFile(path.resolve(__dirname, "./templates/style.css"), path.join(OUTPUT_DIR, "style.css"), (err) => (err) ? console.log(err) : 0)
     console.log(`Page created!\nLocation: ${outputPath}`)
 }
 
